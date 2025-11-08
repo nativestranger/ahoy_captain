@@ -1,11 +1,14 @@
 module AhoyCaptain
   class CityQuery < ApplicationQuery
     def build
+      # Use database-agnostic concat
+      concat_expr = AhoyCaptain::DatabaseAdapter.concat('city', 'region', 'country')
+      
       visit_query
-        .select("city, country, count(concat(city, region, country)) as count, sum(count(concat(city, region, country))) over() as total_count")
+        .select("city, country, count(#{concat_expr}) as count, sum(count(#{concat_expr})) over() as total_count")
         .where.not(city: nil)
         .group("city, region, country")
-        .order(Arel.sql "count(concat(city, region, country)) desc")
+        .order(Arel.sql "count(#{concat_expr}) desc")
     end
   end
 end

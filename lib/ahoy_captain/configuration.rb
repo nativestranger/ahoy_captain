@@ -21,8 +21,10 @@ module AhoyCaptain
       end
       @event = ActiveSupport::OrderedOptions.new.tap do |option|
         option.view_name = "$view"
-        option.url_column = "CONCAT(#{@models.event.parameterize.tableize}.properties->>'controller', '#', #{@models.event.parameterize.tableize}.properties->>'action')"
-        option.url_exists = "JSONB_EXISTS(#{@models.event.parameterize.tableize}.properties, 'controller') AND JSONB_EXISTS(#{@models.event.parameterize.tableize}.properties, 'action')"
+        # Dynamically generate SQL based on database adapter
+        table_name = @models.event.parameterize.tableize
+        option.url_column = DatabaseAdapter.build_url_column(table_name)
+        option.url_exists = DatabaseAdapter.build_url_exists(table_name)
       end
       @filters = FiltersConfiguration.load_default
       @predicate_labels = {

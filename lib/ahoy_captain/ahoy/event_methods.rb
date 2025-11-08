@@ -39,11 +39,11 @@ module AhoyCaptain
         }
 
         scope :with_property_values, ->(value) {
-          where("JSONB_EXISTS(properties, '#{value}')")
+          where(AhoyCaptain::DatabaseAdapter.json_key_exists("properties", value))
         }
 
         ransacker :properties, args: [:parent, :ransacker_args] do |parent, args|
-          Arel::Nodes::InfixOperation.new('->>', parent.table[:properties], Arel::Nodes.build_quoted(args))
+          AhoyCaptain::DatabaseAdapter.ransacker_json_extract(parent, args)
         end
 
         ransacker :goal,

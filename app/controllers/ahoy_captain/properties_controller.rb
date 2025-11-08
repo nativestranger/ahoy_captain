@@ -1,7 +1,7 @@
 module AhoyCaptain
   class PropertiesController < ApplicationController
     before_action do
-      @options = ::Ahoy::Event.select("jsonb_object_keys(properties) as keys").distinct("jsonb_object_keys(properties)").map(&:keys).map { |key| [Base64.urlsafe_encode64(key), key]}.to_h
+      @options = extract_property_keys.map { |key| [Base64.urlsafe_encode64(key), key]}.to_h
     end
 
     def index
@@ -9,15 +9,24 @@ module AhoyCaptain
 
     def show
       value = Base64.urlsafe_decode64(params[:id])
+      json_extract = AhoyCaptain::DatabaseAdapter.json_extract_text("properties", value)
+      coalesce_expr = "COALESCE(#{json_extract}, '(none)')"
+
+      # Handle percentage calculation differently for SQLite vs PostgreSQL
+      percentage_calc = if AhoyCaptain::DatabaseAdapter.postgresql?
+        "(COUNT(DISTINCT visit_id)/COUNT(*)::numeric) * 100"
+      else
+        "(CAST(COUNT(DISTINCT visit_id) AS REAL) / COUNT(*)) * 100"
+      end
 
       @properties = event_query
         .select(
-          "COALESCE(properties->>'#{value}', '(none)') AS label",
+          "#{coalesce_expr} AS label",
           "COUNT(*) AS events_count",
           "COUNT(DISTINCT visit_id) AS unique_visitors_count",
-          "(COUNT(DISTINCT visit_id)/COUNT(*)::numeric) * 100 as percentage"
+          "#{percentage_calc} as percentage"
         )
-        .group("COALESCE(properties->>'#{value}', '(none)')")
+        .group(coalesce_expr)
         .order(Arel.sql "COUNT(*) desc")
     end
 
@@ -36,6 +45,21 @@ module AhoyCaptain
 
     def searching_properties
       JSON.parse(params.dig("q", "properties_json_cont") || '{}')
+    end
+
+    def extract_property_keys
+      if AhoyCaptain::DatabaseAdapter.postgresql?
+        ::Ahoy::Event
+          .select("jsonb_object_keys(properties) as keys")
+          .distinct
+          .pluck("jsonb_object_keys(properties)")
+      else
+        # SQLite: use json_each to extract keys
+        ::Ahoy::Event
+          .from("#{::Ahoy::Event.table_name}, json_each(#{::Ahoy::Event.table_name}.properties)")
+          .select("DISTINCT json_each.key as keys")
+          .pluck("json_each.key")
+      end
     end
   end
 end

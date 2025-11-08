@@ -26,20 +26,45 @@ module AhoyCaptain
 
     def number_to_duration(duration)
       if duration
-        "#{duration.in_minutes.to_i}M #{duration.parts[:seconds].to_i}S"
+        minutes = duration.in_minutes.to_i
+        seconds = (duration.in_seconds.to_i % 60)
+        "#{minutes}m #{seconds}s"
       else
-        "0M 0S"
+        "0m 0s"
       end
     end
 
+    def number_to_percentage(number, options = {})
+      precision = options.fetch(:precision, 2)
+      "#{number.round(precision)}%"
+    end
+
     def ahoy_captain_importmap_tags(entry_point = "application", shim: true)
-      safe_join [
-        (javascript_importmap_shim_tag if shim),
-        (javascript_importmap_shim_nonce_configuration_tag if shim),
-        javascript_import_module_tag(entry_point),
-        javascript_importmap_module_preload_tags(AhoyCaptain.importmap),
-        javascript_inline_importmap_tag(AhoyCaptain.importmap.to_json(resolver: self)),
-      ].compact, "\n"
+      # Prefer modern helper if available (importmap-rails >= 1.1)
+      if respond_to?(:javascript_importmap_tags)
+        return safe_join [
+          javascript_importmap_tags,
+          javascript_import_module_tag(entry_point)
+        ], "\n"
+      end
+
+      # Legacy helpers (importmap-rails 1.0 style) - guard per method
+      parts = []
+      if shim && respond_to?(:javascript_importmap_shim_tag)
+        parts << javascript_importmap_shim_tag
+      end
+      if shim && respond_to?(:javascript_importmap_shim_nonce_configuration_tag)
+        parts << javascript_importmap_shim_nonce_configuration_tag
+      end
+      parts << javascript_import_module_tag(entry_point)
+      if respond_to?(:javascript_importmap_module_preload_tags)
+        parts << javascript_importmap_module_preload_tags(AhoyCaptain.importmap)
+      end
+      if respond_to?(:javascript_inline_importmap_tag)
+        parts << javascript_inline_importmap_tag(AhoyCaptain.importmap.to_json(resolver: self))
+      end
+
+      safe_join parts.compact, "\n"
     end
 
     def search_params

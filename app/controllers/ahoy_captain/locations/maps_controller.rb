@@ -16,7 +16,7 @@ module AhoyCaptain
           @countries = paginate(results).map { |country| CountryDecorator.new(country, self) }
           render template: 'ahoy_captain/locations/countries/index'
         else
-          @countries = visit_query.group("country").count
+          @countries = visit_query.where.not(country: nil).group("country").count
         end
       end
     end

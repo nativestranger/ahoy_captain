@@ -5,7 +5,8 @@ module AhoyCaptain
 
       included do
         ransacker :ref_domain do
-          Arel.sql("(substring(#{self.table_name}.referring_domain from '(?:.*://)?(?:www\.)?([^/?]*)'))")
+          expr = AhoyCaptain::DatabaseAdapter.domain_from("#{self.table_name}.referring_domain")
+          Arel.sql("(#{expr})")
         end
       end
 

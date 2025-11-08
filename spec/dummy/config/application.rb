@@ -2,6 +2,13 @@ require_relative "boot"
 
 require "rails/all"
 
+# Load sprockets for asset pipeline support
+begin
+  require "sprockets/railtie"
+rescue LoadError
+  # Sprockets not available
+end
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)

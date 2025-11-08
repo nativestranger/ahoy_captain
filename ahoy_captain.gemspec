@@ -28,6 +28,12 @@ Gem::Specification.new do |spec|
   spec.add_dependency "groupdate", ">= 5"
   spec.add_dependency "pagy", ">= 4"
   spec.add_dependency "rubyzip"
+  # Ruby 3.4+ compatibility - these were removed from stdlib
+  spec.add_dependency "base64"
+  spec.add_dependency "bigdecimal"
+  spec.add_dependency "mutex_m"
+  spec.add_dependency "observer"
+  spec.add_dependency "drb"
 
   spec.add_development_dependency "rails", ">= 6"
   spec.add_development_dependency "sprockets-rails"

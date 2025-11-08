@@ -3,6 +3,7 @@ require "ahoy_captain/railtie"
 require "ahoy_captain/engine"
 require "ahoy_captain/goals"
 require "ahoy_captain/funnels"
+require "ahoy_captain/database_adapter"
 require "ahoy_captain/configuration"
 require "ahoy_captain/predicate_label"
 require 'ahoy_captain/ahoy/visit_methods'
@@ -32,7 +33,7 @@ module AhoyCaptain
         pin "Chart.bundle", to: "Chart.bundle.js"
         pin "chartjs-plugin-datalabels", to: "https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2", preload: true
         pin "classnames", to: "https://cdnjs.cloudflare.com/ajax/libs/classnames/2.3.2/index.min.js", preload: true
-        pin "chartjs-chart-geo", to: "https://unpkg.com/chartjs-chart-geo@4", preload: true
+        pin "chartjs-chart-geo", to: "ahoy_captain/chartjs-chart-geo.min.js", preload: true
         pin_all_from AhoyCaptain::Engine.root.join("app/assets/javascript/ahoy_captain/controllers"), under: "controllers", to: "ahoy_captain/controllers"
         pin_all_from AhoyCaptain::Engine.root.join("app/assets/javascript/ahoy_captain/helpers"), under: "helpers", to: "ahoy_captain/helpers"
       end

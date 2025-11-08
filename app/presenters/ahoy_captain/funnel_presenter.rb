@@ -35,7 +35,13 @@ module AhoyCaptain
         queries,
         ).select(select).from("#{last_goal.id}").order("sort_order asc")
 
-      items = ::Ahoy::Event.with(steps: steps).select("total_events, unique_visits, name, round((total_events::numeric/lag(total_events, 1) over ()),2) as drop_off").from("steps").order("sort_order asc").index_by(&:name)
+      # Cast to numeric/real for division depending on database
+      cast_type = AhoyCaptain::DatabaseAdapter.postgresql? ? "::numeric" : ""
+      cast_division = AhoyCaptain::DatabaseAdapter.postgresql? ? 
+        "total_events::numeric/lag(total_events, 1) over ()" :
+        "CAST(total_events AS REAL)/lag(total_events, 1) over ()"
+      
+      items = ::Ahoy::Event.with(steps: steps).select("total_events, unique_visits, name, round((#{cast_division}),2) as drop_off").from("steps").order("sort_order asc").index_by(&:name)
       items.delete("_internal_total_visits_")
       @steps = []
 

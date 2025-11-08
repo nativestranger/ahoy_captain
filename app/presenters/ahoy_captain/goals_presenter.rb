@@ -30,7 +30,9 @@ module AhoyCaptain
             "'#{goal.id}' as goal_id"
           ]
         ).merge(goal.event_query.call).group("#{AhoyCaptain.event.table_name}.name")
-        selects << ["SELECT unique_visits, name, total_events, sort_order, 0::decimal as cr, '#{goal.id}' as goal_id from #{goal.id}"]
+        # Cast 0 to decimal/real depending on database
+        zero_decimal = AhoyCaptain::DatabaseAdapter.postgresql? ? "0::decimal" : "0.0"
+        selects << ["SELECT unique_visits, name, total_events, sort_order, #{zero_decimal} as cr, '#{goal.id}' as goal_id from #{goal.id}"]
         map[goal.id] = goal
         last_goal = goal
       end

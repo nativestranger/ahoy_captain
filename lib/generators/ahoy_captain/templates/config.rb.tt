@@ -8,14 +8,18 @@ AhoyCaptain.configure do |config|
   # URL column
   # The properties that indicate what URL was viewed. Ahoy suggested tracking the
   # controller and action for each view by default, so we use that here.
-  # config.event.url_column = "CONCAT(properties->>'controller', '#', properties->>'action')"
+  # This is automatically adapted for your database (PostgreSQL or SQLite).
+  # Default configuration extracts: properties['controller'] + '#' + properties['action']
   #
-  # If you have a `url` key in your `properties`, you could:
-  # config.event.url_column = "properties->>'url'"
+  # If you have a `url` key in your `properties`, you can customize it:
+  # For PostgreSQL:
+  #   config.event.url_column = "properties->>'url'"
+  # For SQLite:
+  #   config.event.url_column = "JSON_EXTRACT(properties, '$.url')"
   #
   # URL exists
   # A query that indicates if a view event has the correct properties for a page view.
-  # config.event.url_exists = "JSONB_EXISTS(properties, 'controller') AND JSONB_EXISTS(properties, 'action')"
+  # This is also automatically adapted for your database.
   #
   # ==> Models
   #

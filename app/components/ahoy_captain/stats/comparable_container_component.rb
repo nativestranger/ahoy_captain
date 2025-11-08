@@ -50,10 +50,17 @@ module AhoyCaptain
 
       def number_to_duration(duration)
         if duration
-          "#{duration.in_minutes.to_i}M #{duration.parts[:seconds].to_i}S"
+          minutes = duration.in_minutes.to_i
+          seconds = (duration.in_seconds.to_i % 60)
+          "#{minutes}m #{seconds}s"
         else
-          "0M 0S"
+          "0m 0s"
         end
+      end
+
+      def number_to_percentage(number, options = {})
+        precision = options.fetch(:precision, 2)
+        "#{number.round(precision)}%"
       end
 
       def compare_range_string

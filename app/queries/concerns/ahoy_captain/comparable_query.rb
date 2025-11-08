@@ -66,18 +66,32 @@ module AhoyCaptain
       end
 
       def result
-        result = @model.with(
-          current: @query.to_sql,
-          compare: @compare.to_sql
-        ).select("current, compare").from("current, compare")[0]
         type = @query_class.cast_type(@column)
 
-        if result
-          current = @query_class.cast_value(type, result.current[1...-1])
-          compare = @query_class.cast_value(type, result.compare[1...-1])
+        if AhoyCaptain::DatabaseAdapter.sqlite?
+          # SQLite: Use scalar subselects to avoid selecting bare CTE names
+          sql = "SELECT (#{@query.to_sql}) AS current, (#{@compare.to_sql}) AS compare"
+          row = @model.find_by_sql(sql).first
+          if row
+            current = @query_class.cast_value(type, row["current"].to_s)
+            compare = @query_class.cast_value(type, row["compare"].to_s)
+          else
+            current = @query_class.cast_value(type, '0')
+            compare = @query_class.cast_value(type, '0')
+          end
         else
-          current = @query_class.cast_value(type, '0')
-          compare = @query_class.cast_value(type, '0')
+          result = @model.with(
+            current: @query.to_sql,
+            compare: @compare.to_sql
+          ).select("current, compare").from("current, compare")[0]
+
+          if result
+            current = @query_class.cast_value(type, result.current[1...-1])
+            compare = @query_class.cast_value(type, result.compare[1...-1])
+          else
+            current = @query_class.cast_value(type, '0')
+            compare = @query_class.cast_value(type, '0')
+          end
         end
 
         @result = ComparisonResult.new((current), (compare))

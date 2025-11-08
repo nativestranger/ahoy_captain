@@ -20,14 +20,16 @@ AhoyCaptain.configure do |config|
   config.goal :viewed_booking_form do
     label "Viewed booking form"
     query do
-      ::Ahoy::Event.where("ahoy_events.properties @> ?", { controller: "booking/schedules", action: "show"}.to_json)
+      # Use Ahoy's built-in where_props which is database-agnostic
+      ::Ahoy::Event.where_props(controller: "booking/schedules", action: "show")
     end
   end
 
   config.goal :created_appointment do
     label "Appointment Updated"
     query do
-      ::Ahoy::Event.where("ahoy_events.properties @> ?", { controller: "booking/appointments", action: "show"}.to_json)
+      # Use Ahoy's built-in where_props which is database-agnostic
+      ::Ahoy::Event.where_props(controller: "booking/appointments", action: "show")
     end
   end
 
