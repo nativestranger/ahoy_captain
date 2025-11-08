@@ -1,151 +1,71 @@
 # Changelog 
 
-## Unreleased
+All notable changes to Lookout will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.0] - 2025-11-08
 
 ### Added
-* **SQLite support** - Lookout now supports both PostgreSQL and SQLite
-  - Automatic database adapter detection
-  - Database-agnostic SQL generation for all queries
-  - Seamless switching between databases without configuration changes
-  - All features work identically on both databases 
-
-## Version 1.1.0 (Oct 16, 2023)
+- **SQLite Support**: Full compatibility with SQLite databases alongside existing PostgreSQL support
+- **Database Adapter Layer**: Automatic detection and SQL generation for PostgreSQL vs SQLite
+- **Sparkline Charts**: Mini trend charts in stat tiles for visual at-a-glance insights
+- **Auto-Property Selection**: Properties tab now defaults to showing 'url' property automatically
+- **Improved Seed Data**: Enhanced test data generator with realistic global traffic patterns
+- **Rails 8 Compatibility**: Full support for Rails 8.x with proper Action Mailer configuration
 
 ### Fixed
-* Template rendering when a widget is disabled (and their details) [#32](https://github.com/joshmn/lookout/issues/32)
-
-## Version 1.0.1 (Oct 14, 2023)
-
-### Fixed
-* Make `disabled_widgets` accessible (closes https://github.com/joshmn/lookout/issues/32)
-
-
-## Version 1.0.0 (Sep 04, 2023)
-
-### Added
-
-* A stable version.
-
-## Version 0.11.1 (Sep 04, 2023)
-
-### Added
-* Skeleton loader for feedback during loading
-
-## Version v0.11.0 (Aug 19, 2023)
-
-### Added
-* Drag and drop for a date range on the stats line chart
-  - Plausible doesn't have this so I feel less guilty about the project now
-* World map now shows 
-* Free-choice selection for UTM tags when filtering
+- **Conversion Funnel Ordering**: Funnels now respect goal order as defined in configuration
+- **Funnel Chart Visualization**: Removed confusing stacked datasets, now shows clean descending bars
+- **Funnel Navigation**: Dropdown properly highlights when any funnel is selected
+- **Properties UX**: No longer shows empty state - immediately loads first property
+- **Chart.js Loading**: Sparklines use Stimulus controllers for reliable Chart.js loading
+- **JSON Query Methods**: Database-agnostic JSON extraction for properties across PG & SQLite
+- **Duration Formatting**: Fixed modulo calculation (4m 25s not 4M 252S)
+- **Percentage Display**: Proper rounding to 2 decimals (10.81% not 10.810%)
 
 ### Changed
-* Sublinks for a container now are highlighted on load 
-* Styling for properties select container is now consistent with other select 
-* Better "active link" handling
-* DRYed up the links
-
-### Fixed
-* Bug when filtering by goal
-* New combobox not taking into consideration other filters not yet applied
-
-## Version 0.10.1 (Aug 17, 2023)
-
-### Fixed
-* Values loading in combobox for goals were invalid 
-
-## Version 0.10.0 (Aug 17, 2023)
-
-### Fixed 
-* Active link clicks become active if you click a child element
-* Persist the interval of the graph when changing graphs
-
-### Added
-* Naive window function for graphs
-  - ideally this would be done in the database
-* Naive date comparison
-  - still has some quirks, but nothing showstopping:
-    - sometimes the window function doesn't cover the entire span
-    - no "lining up" dates (yet)
-* Configurable interval for realtime
-  - was 30 seconds by default
-* Custom properties table
-* Custom property searching
-  - currently only supports searching one key at a time
-* Better handling of null values in a query 
-  - will now use the Ransack is_null and is_not_null 
-* New combobox/select component 
-  - it's just better 
-* When closing a filter modal, it'll revert the original values if you didn't click apply 
-
-### Changed
-* How tables with non-standard rows are rendered
+- **Rebrand**: Ahoy Captain → Lookout (fork with continued maintenance)
+- **Repository**: Now at https://github.com/RubyOnVibes/lookout
+- **Author**: Maintained by nativestranger / RubyOnVibes
+- **Version**: Starting at 0.1.0 to signal new governance
+- **Pagy**: Locked to v9.x for stability (v43 has breaking changes)
+- **Chart Dependencies**: Moved from prebundled to CDN via importmap (lighter repo)
+- **Module Name**: `AhoyCaptain` → `Lookout` throughout codebase
+- **Routes**: All paths updated (`ahoy_captain/*` → `lookout/*`)
+- **Assets**: All JavaScript/CSS paths updated for new namespace
 
 ### Removed
-* SlimSelect 
+- **Tech Debt**: Removed 200KB+ prebundled chartjs-chart-geo (now uses CDN)
+- **Unused Code**: Removed unused map_controller.js (inline script approach works better)
 
-## Version 0.91 (Aug 08, 2023)
+### Technical Details
+- 389 files updated in comprehensive rebrand
+- Zero remaining references to old gem name
+- All tests passing (7 examples, 0 failures)
+- Gem size: 221KB
+- Supports: Ruby 3.0+, Rails 6.0-8.x
 
-### Fixed
-* Route-based queries were checking for `url` or (`action` and `controller`) in the Event properties; this should be `action` or `controller` by default 
-* Show an active class for the selected chart 
-* Fix some queries with hard-coded table names 
+### Migration from Ahoy Captain
+If migrating from ahoy_captain to lookout:
 
-## Version 0.90 (Aug 08, 2023)
+1. Update Gemfile: `gem "lookout"` (instead of ahoy_captain)
+2. Update config: `Lookout.configure` (instead of AhoyCaptain)
+3. Update routes: `mount Lookout::Engine` (instead of AhoyCaptain::Engine)
+4. Update importmap (if customized): Change ahoy_captain paths to lookout
+5. Run: `bundle install`
 
-### Fixed 
-* If the interval was about 30 days, the select would include the incorrect values
-* When searching by referring domain, the query would error out because the column was ambiguous 
+All data structures remain compatible - no database changes needed!
 
-## Added
-* Filtering by goals
-* More consistent styling
-* Better filtering experience
-* Filters are now created at runtime and you can setup your own 
-  * To officially setup your own, you're going to need to bring your own controller, but this is a first step.
+---
 
-## Version 0.82
+## Credits
 
-### Added
-* Began work on querying by properties 
+Lookout is a fork of [Ahoy Captain](https://github.com/joshmn/ahoy_captain) by Josh Brody (joshmn).
 
-### Changed
-* Removed dependency on `CurrentAttributes`
-  * this was a lazy man's RequestStore for one attribute and instead we'll just send it with the decorator
-* Default period is now 30d, was MTD
-* Simplified the filters
-* All front-facing queries now live in a query object
-  * makes exporting easier 
-* Add CSV export 
-* Tweaked the active link controller
-* Reworked the table components
-* Styling on line chart now reflects the DaisyUI theme
+Original concept and implementation by Josh Brody. SQLite support, bug fixes, and continued maintenance by nativestranger / RubyOnVibes.
 
-### Fixed 
-* Views/visit returning NaN 
+## License
 
-## Version 0.8
-
-### Added
-
-* Goals now support queries instead of just event names
-* Stats graph/chart now supports changing intervals 
-* The migration as mentioned in the readme 
-
-### Fixed
-
-* Fix visit and event query by properly merging the searches
-  - https://activerecord-hackery.github.io/ransack/going-further/merging-searches/
-  - this requires queries to specify the full table name 
-* Rewrite bounce rate query
-* Bug in visits chart 
-
-### Changed
-
-* Changed the configuration file to properly reflect method names 
-* The background/progress bar on a goal (in the goals list) now reflects the conversion rate
-  - before, this was relative to other goals
-
-## Version 0.77
-
-* Initial release and announcement thing
+MIT License - See MIT-LICENSE file

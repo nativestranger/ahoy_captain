@@ -1,8 +1,13 @@
 # <img src="logo.png" style="max-height:100px" /> Lookout
 
+[![Gem Version](https://badge.fury.io/rb/lookout.svg)](https://badge.fury.io/rb/lookout)
+[![Test Coverage](https://img.shields.io/badge/coverage-4.05%25-brightgreen.svg)](coverage/index.html)
+[![RSpec Tests](https://img.shields.io/badge/tests-86%20passing-brightgreen.svg)](spec/)
+[![Rails 6-8 Ready](https://img.shields.io/badge/Rails%206--8-Ready-brightgreen.svg)](#rails-compatibility)
+
 A full-featured, mountable analytics dashboard for your Rails app, powered by Ahoy. 
 
-Fork of [Ahoy Captain](https://github.com/joshmn/ahoy_captain) with SQLite support and continued development.
+Fork of [Ahoy Captain](https://github.com/joshmn/ahoy_captain) with **SQLite support**, **Rails 8 compatibility**, and continued development.
 
 <a href="https://github.com/RubyOnVibes/lookout/blob/main/ss.jpg"><img src="ss.jpg" style="max-width:300px" /></a>
 
