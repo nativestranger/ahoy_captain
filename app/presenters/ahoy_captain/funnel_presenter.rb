@@ -9,8 +9,8 @@ module AhoyCaptain
     end
 
     def build
-      if AhoyCaptain.config.goals.none?
-        @goals = []
+      if AhoyCaptain.config.goals.none? || @funnel.goals.none?
+        @steps = []
         return self
       end
 
@@ -21,7 +21,8 @@ module AhoyCaptain
       last_goal = nil
       map = {}.with_indifferent_access
 
-      AhoyCaptain.config.goals.each_with_index do |goal, index|
+      # Use funnel's goals in order, not all configured goals
+      @funnel.goals.each_with_index do |goal, index|
         queries[goal.id] = @event_query.select("count(distinct(#{AhoyCaptain.event.table_name}.visit_id)) as unique_visits, '#{goal.id}' as name, count(distinct #{AhoyCaptain.event.table_name}.id) as total_events, #{index + 1} as sort_order").merge(goal.event_query.call).group("#{AhoyCaptain.event.table_name}.name")
         selects << ["SELECT unique_visits, name, total_events, sort_order from #{goal.id}"]
         map[goal.id] = goal

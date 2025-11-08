@@ -131,7 +131,7 @@
         <button data-action="click->details-modal#openModal" data-controller="details-modal" data-details-modal-target-value="#devices" class="link no-underline ">Details</button>
       <% end %>
     <% end %>
-    <%= render AhoyCaptain::TileComponent.new(title: "Goals and Funnels", wide: true, classes: "p-4 m-2") do |component| %>
+    <%= render AhoyCaptain::TileComponent.new(title: "Funnels", wide: true, classes: "p-4 m-2") do |component| %>
       <% component.with_display_links do %>
         <div>
           <div >
@@ -139,15 +139,26 @@
               <div class="relative inline-block text-left">
                 <a href="<%= goals_path(search_params) %>" data-turbo-frame="goals" class="inline-block h-5 font-semibold" data-controller="frame-link" data-action="click->tile#setTitle">Goals</a>
                 <a href="<%= properties_path(search_params) %>" data-turbo-frame="goals" class="inline-block h-5 font-semibold" data-controller="frame-link" data-action="click->tile#setTitle">Properties</a>
-                <%= render AhoyCaptain::DropdownLinkComponent.new(title: "Funnels") do |dropdown| %>
-                  <% AhoyCaptain.config.funnels.each do |id, funnel| %>
-                    <% dropdown.with_option do %>
-                      <a href="<%= funnel_path(id, search_params) %>" data-turbo-frame="goals" class="link " data-action="click->tile#setTitle" title="<%= funnel.title %> Funnel">
-                        <%= funnel.title %>
-                      </a>
+                <div class="dropdown dropdown-end inline-block" data-controller='dropdown-label'>
+                  <label
+                    tabindex="0"
+                    class="cursor-pointer inline-block h-5 font-semibold"
+                    data-action='click->dropdown-label#removeHidden'
+                    data-funnel-dropdown-label
+                    data-turbo-frame="goals"
+                    >
+                    <span data-dropdown-label-target="label">Funnels</span>
+                  </label>
+                  <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52" data-dropdown-label-target="close">
+                    <% AhoyCaptain.config.funnels.each do |id, funnel| %>
+                      <li data-action="click->dropdown-label#setLabel">
+                        <a href="<%= funnel_path(id, search_params) %>" data-turbo-frame="goals" class="link" data-action="click->tile#setTitle" data-funnel-link title="<%= funnel.title %>">
+                          <%= funnel.title %>
+                        </a>
+                      </li>
                     <% end %>
-                  <% end %>
-                <% end %>
+                  </ul>
+                </div>
               </div>
             </div>
 

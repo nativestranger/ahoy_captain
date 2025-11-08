@@ -5,6 +5,14 @@ module AhoyCaptain
     end
 
     def index
+      # Auto-select 'url' property if it exists, otherwise first property
+      if @options.any?
+        # Prefer 'url' property
+        url_key = @options.find { |key, value| value == 'url' }&.first
+        default_key = url_key || @options.keys.first
+        
+        redirect_to property_path(id: default_key, **request.query_parameters), status: :see_other
+      end
     end
 
     def show

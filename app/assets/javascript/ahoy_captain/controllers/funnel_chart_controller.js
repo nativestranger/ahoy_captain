@@ -16,32 +16,31 @@ const calculatePercentageDifference = function(oldValue, newValue) {
 export default class extends Controller {
   connect() {
     this.funnel = JSON.parse(this.element.dataset.data);
+    console.log('Funnel data:', this.funnel);
 
     const fontFamily = 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
     const labels = this.funnel.steps.map((step) => step.name);
     const stepData = this.funnel.steps.map((step) => step.total_events);
-    const dropOffData = this.funnel.steps.map((step) => step.drop_off * 100);
+    
+    // Calculate conversion rates as percentages for each step
+    const conversionRates = this.funnel.steps.map((step, index) => {
+      if (index === 0 || !step.drop_off) return 100;
+      return (step.drop_off * 100).toFixed(1);
+    });
 
     const data = {
       labels,
       datasets: [
         {
-          label: 'Visitors',
+          label: 'Events',
           data: stepData,
           borderRadius: 4,
-          color: getCSS('--ac'),
           backgroundColor: getCSS('--p'),
-          stack: 'Stack 0',
-          yAxisID: 'y',
-        },
-        {
-          label: 'Dropoff',
-          data: dropOffData,
-          borderRadius: 4,
-          stack: 'Stack 0',
-          color: getCSS('--ac'),
-          backgroundColor: getCSS('--a'),
-          yAxisID: 'yComparison',
+          borderColor: getCSS('--p'),
+          borderWidth: 2,
+          barPercentage: 0.8,
+          categoryPercentage: 0.9,
+          maxBarThickness: 120,
         },
       ],
     };
@@ -54,7 +53,7 @@ export default class extends Controller {
       data,
       options: {
         layout: {
-          padding: 100,
+          padding: { top: 50, bottom: 20, left: 20, right: 80 },
         },
         plugins: {
           legend: false,
@@ -65,17 +64,41 @@ export default class extends Controller {
           },
           datalabels: {
             anchor: 'end',
-            align: 'end',
+            align: 'top',
             borderRadius: 4,
-            padding: {
-              top: 8, bottom: 8, right: 8, left: 8,
+            padding: { top: 4, bottom: 4, right: 8, left: 8 },
+            color: getCSS('--bc'),
+            font: {
+              weight: 'bold',
+              size: 14
             },
-            color: getCSS('--pc'),
+            clip: false,
+            clamp: false,
+            formatter: (value, context) => {
+              const index = context.dataIndex;
+              const rate = conversionRates[index];
+              if (index === 0) {
+                return value.toLocaleString();
+              }
+              return `${value.toLocaleString()}\n(${rate}%)`;
+            },
             textAlign: 'center',
           },
         },
         scales: {
-          y: { display: false },
+          y: { 
+            display: true,
+            border: { display: false },
+            grid: { 
+              drawBorder: false, 
+              display: true,
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: getCSS('--bc'),
+              callback: (value) => value.toLocaleString()
+            }
+          },
           x: {
             position: 'bottom',
             display: true,
@@ -83,6 +106,11 @@ export default class extends Controller {
             grid: { drawBorder: false, display: false },
             ticks: {
               padding: 8,
+              color: getCSS('--bc'),
+              font: {
+                size: 13,
+                weight: '500'
+              }
             },
           },
         },
@@ -107,23 +135,25 @@ export default class extends Controller {
 
 
   extractTooltipData(tooltip) {
-    const data = this.funnel.steps.find(step => step.name === tooltip.title[0]);
+    const stepIndex = this.funnel.steps.findIndex(step => step.name === tooltip.title[0]);
+    const data = this.funnel.steps[stepIndex];
 
     const value = data.total_events;
-    const label = "Visitors"
-    let comparisonLabel = "Dropoff"
-    let comparisonValue =  data.unique_visits;
+    const uniqueVisits = data.unique_visits;
+    const conversionRate = stepIndex > 0 && data.drop_off ? 
+      `${(data.drop_off * 100).toFixed(1)}% of previous` : 
+      '100%';
 
     return {
       comparison: true,
       comparisonDifference: false,
       metric: tooltip.title[0],
-      label: this.formatLabel(label),
-      labelBackgroundColor: getCSS('--bc'),
-      formattedValue: value,
-      comparisonLabel: comparisonLabel,
-      comparisonLabelBackgroundColor: "",
-      formattedComparisonValue: comparisonValue,
+      label: "Total Events",
+      labelBackgroundColor: getCSS('--p'),
+      formattedValue: value.toLocaleString(),
+      comparisonLabel: "Unique Visits",
+      comparisonLabelBackgroundColor: getCSS('--s'),
+      formattedComparisonValue: `${uniqueVisits.toLocaleString()} (${conversionRate})`,
     }
   }
 }

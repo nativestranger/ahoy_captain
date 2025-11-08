@@ -1,4 +1,6 @@
 <%= turbo_frame_tag :goals do %>
-  <%= render AhoyCaptain::TableComponent.new(items: @presenter.goals,
-                                             table: ::AhoyCaptain::Tables::GoalsTableComponent) %>
+  <div class="pr-4">
+    <%= render AhoyCaptain::TableComponent.new(items: @presenter.goals,
+                                               table: ::AhoyCaptain::Tables::GoalsTableComponent) %>
+  </div>
 <% end %>
