@@ -1,0 +1,6 @@
+<%= turbo_frame_tag :goals do %>
+  <div class="pr-4">
+    <%= render Lookout::TableComponent.new(items: @presenter.goals,
+                                               table: ::Lookout::Tables::GoalsTableComponent) %>
+  </div>
+<% end %>

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'ahoy_captain'
+require 'lookout'
 require 'pry'
 require 'pry-rails'
 

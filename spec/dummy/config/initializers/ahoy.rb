@@ -15,7 +15,7 @@ Ransack.configure do |c|
   c.ignore_unknown_conditions = false
 end
 
-AhoyCaptain.configure do |config|
+Lookout.configure do |config|
   config.ranges.delete :all
   config.goal :viewed_booking_form do
     label "Viewed booking form"

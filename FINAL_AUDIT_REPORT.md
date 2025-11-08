@@ -1,4 +1,4 @@
-# AhoyCaptain SQLite Support - Final Audit Report
+# Lookout SQLite Support - Final Audit Report
 
 ## Executive Summary
 
@@ -21,7 +21,7 @@ All SQLite support has been successfully implemented, tested, and validated for 
 ### 2. Changes Implemented
 
 #### Core SQLite Support ✅
-- **NEW:** `lib/ahoy_captain/database_adapter.rb` (152 lines)
+- **NEW:** `lib/lookout/database_adapter.rb` (152 lines)
   - Auto-detects PostgreSQL vs SQLite at runtime
   - 15+ helper methods for DB-specific SQL
   - Public API with private detection method
@@ -37,7 +37,7 @@ All SQLite support has been successfully implemented, tested, and validated for 
 6. `average_visit_duration_query.rb` - julianday() for SQLite
 7. `funnel_presenter.rb` - CAST AS REAL for SQLite
 8. `goals_presenter.rb` - Decimal literal compatibility
-9. `ahoy_captain.rb` - Added adapter require
+9. `lookout.rb` - Added adapter require
 10. `config.rb.tt` - Updated template comments
 
 #### Modernization ✅
@@ -132,7 +132,7 @@ All SQLite support has been successfully implemented, tested, and validated for 
 
 ## Feature Completeness
 
-All AhoyCaptain features work identically on PostgreSQL and SQLite:
+All Lookout features work identically on PostgreSQL and SQLite:
 
 | Feature | PostgreSQL | SQLite | Status |
 |---------|-----------|--------|--------|
@@ -241,7 +241,7 @@ The adapter detects at runtime. No code changes needed.
 ### CTE Performance
 - **Both:** CTEs work identically
 - **SQLite:** May struggle with complex recursive CTEs at scale
-- **Mitigation:** AhoyCaptain uses simple CTEs (no issue)
+- **Mitigation:** Lookout uses simple CTEs (no issue)
 
 ---
 

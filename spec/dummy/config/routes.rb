@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount AhoyCaptain::Engine => "/"
+  mount Lookout::Engine => "/"
 end

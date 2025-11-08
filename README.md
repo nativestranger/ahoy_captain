@@ -1,13 +1,14 @@
-# <img src="logo.png" style="max-height:100px" /> Viewers
+# <img src="logo.png" style="max-height:100px" /> Lookout
 
+A full-featured, mountable analytics dashboard for your Rails app, powered by Ahoy. 
 
-A full-featured, mountable analytics dashboard for your Rails app, shamelessly inspired by Plausible Analytics, powered by the Ahoy gem.
+Fork of [Ahoy Captain](https://github.com/joshmn/ahoy_captain) with SQLite support and continued development.
 
-<a href="https://github.com/joshmn/ahoy_captain/blob/main/ss.jpg"><img src="ss.jpg" style="max-width:300px" /></a>
+<a href="https://github.com/RubyOnVibes/lookout/blob/main/ss.jpg"><img src="ss.jpg" style="max-width:300px" /></a>
 
 ## Database Support
 
-AhoyCaptain supports **PostgreSQL** and **SQLite**. The gem automatically detects your database adapter and uses the appropriate JSON query syntax. You can seamlessly switch between databases without any configuration changes.
+Lookout supports **PostgreSQL** and **SQLite**. The gem automatically detects your database adapter and uses the appropriate JSON query syntax. You can seamlessly switch between databases without any configuration changes.
 
 ## Installation
 
@@ -16,29 +17,29 @@ AhoyCaptain supports **PostgreSQL** and **SQLite**. The gem automatically detect
 Drop it in:
 
 ```bash
-$ bundle add ahoy_captain
+$ bundle add lookout
 ```
 
 ### 2. Install it
 
 ```bash
-$ rails g ahoy_captain:install
+$ rails g lookout:install
 ```
 
 ### 3. Make sure your events are setup correctly
 
-AhoyCaptain doesn't do any tracking for you; it merely provides a dashboard for your data from the Ahoy gem. 
+Lookout doesn't do any tracking for you; it merely provides a dashboard for your data from the Ahoy gem. 
 
-By default, AhoyCaptain assumes you're tracking `controller` and `action` in your `Ahoy::Event` properties, and a page view event is named `$view`. See this section for more information: https://github.com/ankane/ahoy#events
+By default, Lookout assumes you're tracking `controller` and `action` in your `Ahoy::Event` properties, and a page view event is named `$view`. See this section for more information: https://github.com/ankane/ahoy#events
 
 For a quick sanity check:
 
 ```ruby
-AhoyCaptain.event.where(name: AhoyCaptain.config.event[:view_name]).count
-AhoyCaptain.event.with_routes.count
+Lookout.event.where(name: Lookout.config.event[:view_name]).count
+Lookout.event.with_routes.count
 ```
 
-This can be fully-customized. See the initializer `config/initializers/ahoy_captain.rb` for more.
+This can be fully-customized. See the initializer `config/initializers/lookout.rb` for more.
 
 ### 4. Star this repo
 
@@ -46,7 +47,7 @@ No, seriously, I need all the internet clout I can get.
 
 ### 5. Analyze your nightmares
 
-If you have a large dataset (> 1GB) you probably want some indexes. `rails g ahoy_captain:migration`
+If you have a large dataset (> 1GB) you probably want some indexes. `rails g lookout:migration`
 
 ## Features
 

@@ -3,7 +3,7 @@
 ## Unreleased
 
 ### Added
-* **SQLite support** - AhoyCaptain now supports both PostgreSQL and SQLite
+* **SQLite support** - Lookout now supports both PostgreSQL and SQLite
   - Automatic database adapter detection
   - Database-agnostic SQL generation for all queries
   - Seamless switching between databases without configuration changes
@@ -12,12 +12,12 @@
 ## Version 1.1.0 (Oct 16, 2023)
 
 ### Fixed
-* Template rendering when a widget is disabled (and their details) [#32](https://github.com/joshmn/ahoy_captain/issues/32)
+* Template rendering when a widget is disabled (and their details) [#32](https://github.com/joshmn/lookout/issues/32)
 
 ## Version 1.0.1 (Oct 14, 2023)
 
 ### Fixed
-* Make `disabled_widgets` accessible (closes https://github.com/joshmn/ahoy_captain/issues/32)
+* Make `disabled_widgets` accessible (closes https://github.com/joshmn/lookout/issues/32)
 
 
 ## Version 1.0.0 (Sep 04, 2023)

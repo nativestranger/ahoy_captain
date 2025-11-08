@@ -1,4 +1,4 @@
-AhoyCaptain::Engine.routes.draw do
+Lookout::Engine.routes.draw do
   root to: 'roots#show'
   %w{utm_source utm_medium utm_term utm_content utm_campaign}.each do |utm|
     get "campaigns/#{utm}" => "campaigns#index", defaults: { campaigns_type: utm }, as: "campaign_#{utm}"

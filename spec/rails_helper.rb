@@ -19,6 +19,23 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 
+# Monkey-patch RSpec to not set paths on example groups (Rails 8 compatibility)
+module RSpec
+  module Core
+    class ExampleGroup
+      class << self
+        def fixture_path=(*)
+          # No-op - prevents errors for specs in lib/ and models/
+        end
+        
+        def fixture_paths=(*)
+          # No-op
+        end
+      end
+    end
+  end
+end
+
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.before(:suite) do
