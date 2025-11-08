@@ -1,12 +1,13 @@
-# <img src="logo.png" style="max-height:100px" /> AhoyCaptain
+# <img src="logo.png" style="max-height:100px" /> Viewers
 
 
 A full-featured, mountable analytics dashboard for your Rails app, shamelessly inspired by Plausible Analytics, powered by the Ahoy gem.
 
 <a href="https://github.com/joshmn/ahoy_captain/blob/main/ss.jpg"><img src="ss.jpg" style="max-width:300px" /></a>
-## Notice
 
-Currently requires using PG and a JSONB column for your data.
+## Database Support
+
+AhoyCaptain supports **PostgreSQL** and **SQLite**. The gem automatically detects your database adapter and uses the appropriate JSON query syntax. You can seamlessly switch between databases without any configuration changes.
 
 ## Installation
 

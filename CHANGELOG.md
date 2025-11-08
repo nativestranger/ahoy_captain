@@ -2,7 +2,12 @@
 
 ## Unreleased
 
-Nothing, yet. 
+### Added
+* **SQLite support** - AhoyCaptain now supports both PostgreSQL and SQLite
+  - Automatic database adapter detection
+  - Database-agnostic SQL generation for all queries
+  - Seamless switching between databases without configuration changes
+  - All features work identically on both databases 
 
 ## Version 1.1.0 (Oct 16, 2023)
 
